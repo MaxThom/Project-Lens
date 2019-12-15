@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -33,7 +34,8 @@ namespace WorkerService
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
                 _wallpaperService.Run();
-                _imageService.FetchImages("mountain");
+                var pictures = await _imageService.FetchImagesAsync("mountain");
+                _wallpaperService.Run();
 
                 await Task.Delay(3000, stoppingToken);
             }

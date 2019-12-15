@@ -7,16 +7,18 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WorkerService.Abstract;
+using System.Net.Http;
 
 namespace WorkerService
 {
-    public class Program
+    public static class Program
     {
         // https://codeburst.io/create-a-windows-service-app-in-net-core-3-0-5ecb29fb5ad0
 
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).RunConsoleAsync();
+            // CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -31,6 +33,12 @@ namespace WorkerService
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddHttpClient();
+                    services.AddHttpClient(Constants.UnSplash.apiName, c =>
+                    {
+                        c.BaseAddress = new Uri(Constants.UnSplash.apiUrl);
+                        //c.DefaultRequestHeaders.Add(Constants.UnSplash.apiClientHeader, "39cfbb8b94dac66d3ce6b62190af268dc2716d8659a903f2d4508996fee1be0e");
+                    });
                     services.Configure<AppSettings>(hostContext.Configuration.GetSection("AppSettings"));
                     services.AddHostedService<Worker>();
                     services.AddApplicationInsightsTelemetryWorkerService();

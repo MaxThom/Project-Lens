@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Model.Unsplash;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WorkerService.Abstract
 {
     public interface IImageService
     {
-        void FetchImages(string searchKey);
+        Task<List<Picture>> FetchImagesAsync(string searchKey);
     }
 }
